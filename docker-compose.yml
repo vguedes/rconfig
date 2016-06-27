@@ -1,0 +1,29 @@
+version: '2'
+
+services:
+    rconfig:
+        image: bcouto/rconfig
+    mariadb:
+        image: mariadb
+        environment:
+            - MYSQL_RANDOM_ROOT_PASSWORD=yes
+            - MYSQL_DATABASE=rconfig
+            - MYSQL_USER=rconfig
+            - MYSQL_PASSWORD=rconfig
+        depends_on:
+            - rconfig
+    php-fpm:
+        image: php:fpm-alpine
+        links:
+            - mariadb:db
+        depends_on:
+            - mariadb 
+    nginx:
+        image: nginx:alpine
+        links:
+            - php-fpm
+        ports:
+            - "80:80"
+        depends_on:
+            - php-fpm 
+
