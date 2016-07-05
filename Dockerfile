@@ -26,6 +26,6 @@ RUN chmod u+s /usr/bin/crontab
 RUN mkdir -p /home/rconfig/nginx/conf.d
 COPY nginx.default.conf /home/rconfig/nginx/conf.d/default.conf
 
-VOLUME ["/home/rconfig", "/home/rconfig/nginx/conf.d/"]
+VOLUME ["/home/rconfig", "/home/rconfig/nginx/conf.d/", "/var/spool/cron/"]
 
 WORKDIR /home/rconfig
