@@ -1,0 +1,48 @@
+version: '2'
+
+volumes:
+    home-rconfig:
+        driver: local
+    nginx-confd:
+        driver: local
+    cron-folder:
+        driver: local
+
+services:
+    mariadb:
+        image: mariadb
+        environment:
+            - MYSQL_ROOT_PASSWORD=P@ssword
+    rconfig:
+        image: bcouto/rconfig
+        volumes:
+            - home-rconfig:/home/rconfig
+            - nginx-confd:/home/rconfig/nginx/conf.d
+            - cron-folder:/var/spool/cron/
+        links:
+            - mariadb:db
+        depends_on:
+            - mariadb
+    cron:
+        image: bcouto/rconfig
+        volumes:
+            - home-rconfig:/home/rconfig
+            - cron-folder:/var/spool/cron/
+        command: ["/usr/sbin/crond", "-f"]
+        links:
+            - mariadb:db
+        depends_on:
+            - mariadb
+            - rconfig
+    nginx:
+        image: nginx:alpine
+        volumes:
+            - home-rconfig:/home/rconfig
+            - nginx-confd:/etc/nginx/conf.d
+        links:
+            - rconfig 
+        ports:
+            - "80:80"
+        depends_on:
+            - rconfig 
+            - cron
