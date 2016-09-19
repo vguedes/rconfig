@@ -11,7 +11,7 @@ RUN rm -rf /var/cache/apk/*
 RUN sed -i "s/user = www-data/user = apache/" /usr/local/etc/php-fpm.d/www.conf && \
     sed -i "s/group = www-data/group = apache/" /usr/local/etc/php-fpm.d/www.conf
 
-COPY ./rconfig-3.5.1 /home/rconfig
+COPY ./rconfig-3.6.7 /home/rconfig
  
 RUN adduser -D -H apache apache && \
     find /home/rconfig -type d | xargs chmod 775 && \
